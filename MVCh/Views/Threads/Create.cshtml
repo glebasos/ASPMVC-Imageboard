@@ -1,0 +1,34 @@
+﻿@using MVCh.ViewModels
+@model ThreadViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<form method="post">
+<input asp-for=RefBoardId type="hidden" value="@ViewData["bid"]"/>
+<input asp-for=NewThread.BoardId type="hidden" value="@ViewData["bid"]"/>
+<h1>Create</h1>
+
+<h4>Thread</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NewThread.Name" class="control-label"></label>
+                <input asp-for="NewThread.Name" class="form-control" />
+                <span asp-validation-for="NewThread.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" style="width:150px">Добавить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" asp-route-boardId="@ViewData["bid"]">К списку тредов </a>
+</div>
+</form>

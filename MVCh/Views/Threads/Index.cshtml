@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Thread>
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Треды</h2>
+		</div>
+        <div class="col-6 text-end">
+            <a asp-controller="Threads" asp-action="Create" asp-route-boardId="@ViewData["bid"]" class="btn btn-primary">
+               <i class="bi bi-plus-circle"></i> Добавить тред
+			</a>
+		</div>
+	</div>
+    <br /><br />
+    <div>
+        @foreach (var item in Model)
+        {
+            <div class="card">
+              <div class="card-body">
+                @*<h2>@item.Name</h2>*@
+                <h2>
+                    <a asp-controller="Threads" asp-action="OpenThread" asp-route-id="@item.Id" >@item.Name</a>
+                </h2>
+              </div>
+            </div>
+            <br />
+        }
+    </div>
+    
+</div>
+

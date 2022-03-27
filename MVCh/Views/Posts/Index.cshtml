@@ -1,0 +1,106 @@
+﻿@using MVCh.ViewModels
+@model PostViewModel
+
+@{
+    ViewData["Title"] = Model.ThreadName;
+}
+
+<h1>@Model.ThreadName</h1>
+<form method="post" enctype="multipart/form-data">
+<input asp-for=ThreadId type="hidden" value="@Model.ThreadId"/>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/ckeditor/ckeditor.js"></script>
+
+<div>
+        @if (Model.AllPosts is not null)
+        {
+            @foreach (var item in Model.AllPosts)
+            {
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row no-gutters">
+                        @if(item.PostImages is not null)
+                        {
+                            @foreach (var img in item.PostImages)
+                            {
+                                <div class="col-md-4">
+                                    <a href="~/images/@img.ImageName" target="_blank" rel="noopener noreferrer">
+                                        <img src="~/images/@img.ImageName" class="card-img" alt="...">
+                                    </a>
+                                </div>
+                            }
+                        }
+                        <div class="col-md-8" >
+                            <div class="card-body" >
+                            <h6 class="card-title">ID:@item.Id  ||  Дата:@item.CreatedDate</h6>
+                                <div>
+                                        <p class="card-text">@Html.Raw(item.TextContent)</p>    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+</div>
+
+<br />
+
+<div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NewPost.TextContent" class="control-label">Введите текст сообщения</label>
+                @*<input asp-for="NewPost.TextContent" class="form-control" />*@
+                <textarea asp-for="NewPost.TextContent" class="ckeditor" id="mytextarea" rows="3"></textarea>
+                <input asp-for=NewPost.ThreadId type="hidden" value="@Model.ThreadId"/>
+                <div class="form-group">
+                    <dt>
+                        <label asp-for="UploadedImages">Добавить картинки (Не больше четырёх)</label>
+                    </dt>
+                <dd>
+                    <input asp-for="UploadedImages" type="file" accept="image/*" multiple="multiple" id="FileUpload1" onchange="Validate()"/>
+                    <span asp-validation-for="UploadedImages"></span>
+                </dd>
+                @*<label asp-for="NewPost.PostImages" class="control-label"></label>
+                <input asp-for="NewPost.PostImages" accept="image/*" multiple="multiple" class="custom-file-input"/>
+                <label class="custom-file-label" for="customFile">Choose file</label> *@
+                @*<span asp-validation-for="NewPost.PostImages" class="text-danger"></span>*@
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" style="width:150px" id="scrollhere">Отправить</button>
+            </div>
+</div>
+
+</form>
+
+<script>
+    setTimeout(function() {window.scrollTo(0, document.body.clientHeight+1000);},80)
+    //window.scrollTo(0, document.body.clientHeight)
+    //document.getElementById('scrollhere').scrollIntoView();
+</script>
+<script type="text/javascript">
+    function Validate() {
+        var fileCount = document.getElementById("FileUpload1").files.length;
+        var maxFileSize = 4194304; // 4MB -> 4 * 1024 * 1024
+        if (fileCount > 4) {
+            alert("Max 4 images allowed");
+            document.getElementById("FileUpload1").value = null;
+        }
+        else{
+            var sum = 0;
+            for (let i = 0; i < fileCount; i++) {
+                  sum += document.getElementById("FileUpload1").files[i].size;
+            }
+            if(sum > maxFileSize){
+                alert("Превышен размер загружаемых файлов в одном посте!");
+                document.getElementById("FileUpload1").value = null;
+            }
+        }
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        CKEDITOR.replace('#mytextarea');
+    });
+</script>
